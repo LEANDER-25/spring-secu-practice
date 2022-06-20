@@ -25,6 +25,7 @@ public class SecuritydemoApplication {
 			roleRepo.save(admin);
 			roleRepo.save(customer);
 
+			//password: password1
 			userRepository.save(new User(1L, "email1@gmail.com", "$2y$10$WR/cKrRYTaoJhyeE.OK5T.4qCMv1NVm4k1AQ4PmahqKsvLf4j.rea", admin));
 			userRepository.save(new User(2L, "email2@gmail.com", "$2y$10$WR/cKrRYTaoJhyeE.OK5T.4qCMv1NVm4k1AQ4PmahqKsvLf4j.rea", admin));
 			userRepository.save(new User(3L, "email3@gmail.com", "$2y$10$WR/cKrRYTaoJhyeE.OK5T.4qCMv1NVm4k1AQ4PmahqKsvLf4j.rea", customer));
