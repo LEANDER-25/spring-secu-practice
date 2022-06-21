@@ -4,10 +4,7 @@ import com.phunghung29.securitydemo.dto.UserDto;
 import com.phunghung29.securitydemo.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,5 +23,11 @@ public class UserController {
     public ResponseEntity<?> getUserById(@PathVariable("id") String id) {
         UserDto userDto = userService.findById(Long.parseLong(id));
         return ResponseEntity.ok(userDto);
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<?> findByAge(@RequestParam("age") Integer age) {
+        List<UserDto> userDtoList = userService.findByAge(age);
+        return ResponseEntity.ok(userDtoList);
     }
 }

@@ -12,6 +12,9 @@ import com.phunghung29.securitydemo.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -23,8 +26,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.*;
 
 import static com.phunghung29.securitydemo.Util.Utils.loadProperties;
@@ -81,6 +82,53 @@ public class UserServiceImpl implements UserService {
         } catch (Exception e) {
             throw new RuntimeException("LOGIN_FAILURE");
         }
+    }
+
+    @Override
+    public List<UserDto> findByAge(Integer age) {
+        List<User> userList = userRepository.findByLessOrEqualThanAge(age);
+        if (userList == null || userList.isEmpty()) {
+            throw new RuntimeException("NOT FOUND");
+        }
+        List<UserDto> userDtoList = new ArrayList<>();
+        userList.forEach(item -> {
+            UserDto userDto = new UserDto();
+            BeanUtils.copyProperties(item, userDto);
+            userDto.setRoleName(item.getRole().getRoleName());
+            userDtoList.add(userDto);
+        });
+        return userDtoList;
+    }
+
+    @Override
+    public Page<UserDto> findByAge(Integer age, Pageable pageable) {
+        Page<User> userPage = userRepository.findByLessOrEqualThanAge(age, pageable);
+        if (userPage == null || userPage.getContent().isEmpty()) {
+            throw new RuntimeException("NOT FOUND");
+        }
+        List<UserDto> userDtoList = new ArrayList<>();
+        userPage.getContent().forEach(item -> {
+            UserDto userDto = new UserDto();
+            BeanUtils.copyProperties(item, userDto);
+            userDtoList.add(userDto);
+        });
+        return new PageImpl<>(userDtoList, pageable, userPage.getTotalElements());
+    }
+
+    @Override
+    public List<UserDto> findByGender(String gender) {
+        List<User> userList = userRepository.findByGender(gender);
+        if (userList == null || userList.isEmpty()) {
+            throw new RuntimeException("NOT FOUND");
+        }
+        List<UserDto> userDtoList = new ArrayList<>();
+        userList.forEach(item -> {
+            UserDto userDto = new UserDto();
+            BeanUtils.copyProperties(item, userDto);
+            userDto.setRoleName(item.getRole().getRoleName());
+            userDtoList.add(userDto);
+        });
+        return userDtoList;
     }
 
     public boolean authenticate(String email, String password) throws Exception {

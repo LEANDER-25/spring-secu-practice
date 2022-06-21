@@ -13,4 +13,7 @@ public class UserDto {
     Long id;
     String email;
     String roleName;
+    Integer age;
+    String gender;
+    Boolean isActivated;
 }
